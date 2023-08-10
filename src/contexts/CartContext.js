@@ -9,6 +9,7 @@ function CartProvider({ children }){
     const indexItem = cart.findIndex(item => item.id === newItem.id) 
 
     if(indexItem !== -1){
+      // Se entrou aqui quer dize que temos que adicionar +1 quantidade por que ele já esta na sua lista
       let cartList = cart;
 
       cartList[indexItem].amount = cartList[indexItem].amount + 1;
@@ -29,12 +30,35 @@ function CartProvider({ children }){
 
 
   }
+
+
+  function removeItemCart(product){
+    const indexItem = cart.findIndex(item => item.id === product.id)
+
+    if(cart[indexItem]?.amount > 1){
+      let cartList = cart;
+
+      cartList[indexItem].amount = cartList[indexItem].amount - 1;
+
+      cartList[indexItem].total = cartList[indexItem].total - cartList[indexItem].price;
+
+      setCart(cartList);
+      return;
+    }
+
+    const removeItem = cart.filter(item => item.id !== product.id)
+    setCart(removeItem);
+
+
+  }
+
   
   return(
     <CartContext.Provider
       value={{
         cart,
-        addItemCart
+        addItemCart,
+        removeItemCart
       }}
     >
       {children}
